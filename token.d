@@ -1,11 +1,12 @@
+@safe
 import std.string;
 import std.conv;
 
-class Token {
-	const string name;
-	const int oldnum;
-	const TokenFeature feature;
-	const string str;
+const class Token {
+	string name;
+	int oldnum;
+	TokenFeature feature;
+	string str;
 
 	this(string name, int oldnum = 0, TokenFeature feature = 0, string str = "") {
 		this.name = name;
@@ -14,11 +15,11 @@ class Token {
 		this.str = str;
 	}
 
-	bool opEquals(Object rhs) {
+	bool opEquals(Object rhs) const {
 		return this is rhs;
 	}
 
-	string toString() {
+	string toString() const {
 		return name;
 	}
 }
@@ -48,11 +49,11 @@ private string t(string name, string str, int num = 0) {
 
 private string t(string name, string str, TokenFeature feature, int num) {
 	string uname = name.toUpper();
-	string result = "static Token " ~ uname ~ ";\n";
+	string result = "static const(Token) " ~ uname ~ ";\n";
 	result ~= init(uname ~ ` = new Token("` ~ name ~ `", ` ~ 
 		to!string(num) ~ `, ` ~ to!string(feature) ~ `, "` ~ str ~ `");`);
 	if (uname != name) 
-		result ~= "\n" ~ init(`keywords["` ~ name ~ `"] = ` ~ uname ~ `;`);
+		result ~= "\n" ~ init(`keywords["` ~ name ~ `"] = cast(Token) ` ~ uname ~ `;`);
 	return result;
 }
 

@@ -1,18 +1,19 @@
+@safe
 import std.ascii, std.conv, std.string, std.array, std.algorithm;
 import token;
 
-struct Result {
-	Token token;
+const struct Result {
+	const Token token;
 	string remainder;
 	string value;
 }
 
 Result next(string src) {
-		Result result;
-		do
-			result = nextAll(src);
-			while (result.token == WHITE || result.token == COMMENT);
-		return result;
+	while (true) {
+		Result r = nextAll(src);
+		if (r.token != WHITE && r.token != COMMENT)
+			return r;
+	}
 }
 
 Result nextAll(string src) {
@@ -266,25 +267,27 @@ import std.stdio : writeln;
 unittest {
 	import asserts;
 
-	void test(string s, Token[] tokens...) {
+	void test(string s, const(Token)[] tokens...) {
+		if (tokens.empty)
+			return;
 writeln("test ", s);
 		Result r = s.next();
-		foreach (t; tokens) {
 writeln(r);
-			Assert(r.token, Is(t), "input: '" ~ s ~ "'");
-			r = next(r.remainder);
-		}
+		Assert(r.token, Is(tokens.front), "input: '" ~ s ~ "'");
+		tokens.popFront();
+		test(r.remainder, tokens);
 	}
-	void testAll(string s, Token[] tokens...) {
+	void testAll(string s, const(Token)[] tokens...) {
+		if (tokens.empty)
+			return;
 writeln("testAll ", s);
 		Result r = s.nextAll();
-		foreach (t; tokens) {
 writeln(r);
-			Assert(r.token, Is(t), "input: '" ~ s ~ "'");
-			r = nextAll(r.remainder);
-		}
+		Assert(r.token, Is(tokens.front), "input: '" ~ s ~ "'");
+		tokens.popFront();
+		testAll(r.remainder, tokens);
 	}
-	void testVal(string s, Token token, string value = null) {
+	void testVal(string s, const Token token, string value = null) {
 writeln("testVal ", s);
 		if (value is null)
 			value = s;

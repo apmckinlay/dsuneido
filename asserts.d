@@ -1,39 +1,40 @@
+@safe
 import std.conv;
 import std.algorithm;
 
 class Matcher(T) {
-	abstract bool matches(T x);
-	abstract string message(T x);
+	abstract bool matches(const T x);
+	abstract string message(const T x);
 }
 
 class IsMatcher(T) : Matcher!T {
-	private T expected;
+	private const T expected;
 
-	this(T expected) {
+	this(const T expected) {
 		this.expected = expected;
 	}
-	bool matches(T x) {
+	bool matches(const T x) {
 		return x == expected;
 	}
-	string message(T x) {
+	string message(const T x) {
 		return "Expected: " ~ expected.to!string() ~ 
 				" but it was: " ~ x.to!string();
 	}
 }
-static auto Is(T)(T x) {
+static auto Is(T)(const T x) {
 	return new IsMatcher!T(x);
 }
 
 class StartsWithMatcher(T) : Matcher!T {
-	private T prefix;
+	private const T prefix;
 
-	this(T prefix) {
+	this(const T prefix) {
 		this.prefix = prefix;
 	}
-	bool matches(T x) {
+	bool matches(const T x) {
 		return startsWith(x, prefix);
 	}
-	string message(T x) {
+	string message(const T x) {
 		static if (is(T == string))
 			return `Expected a string starting with: "` ~ prefix ~ 
 				`" but it was: "` ~ x ~ `"`;
@@ -42,7 +43,7 @@ class StartsWithMatcher(T) : Matcher!T {
 				" but it was: " ~ x.to!string();
 	}
 }
-static auto StartsWith(T)(T x) {
+static auto StartsWith(T)(const T x) {
 	return new StartsWithMatcher!T(x);
 }
 
