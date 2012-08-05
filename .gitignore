@@ -1,0 +1,8 @@
+
+*.deps
+
+*.o
+
+*.sublime-workspace
+
+*.sublime-project
