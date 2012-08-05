@@ -111,12 +111,9 @@ private dchar pop(ref string src) {
 
 private Result whitespace(string src) {
 	bool eol = false;
-string orig = src;
-writeln("whitespace");
 	for (; ! src.empty && isWhite(src.front); src.popFront)
 		if (src.front == '\n' || src.front == '\r')
 			eol = true;
-assert(src.length < orig.length);
 	return Result(eol ? NEWLINE : WHITE, src);
 }
 
@@ -262,17 +259,13 @@ private Result identifier(string src) {
 			? keyword : IDENTIFIER, src, value);
 }
 
-import std.stdio : writeln;
-
 unittest {
 	import asserts;
 
 	void test(string s, const(Token)[] tokens...) {
 		if (tokens.empty)
 			return;
-writeln("test ", s);
 		Result r = s.next();
-writeln(r);
 		Assert(r.token, Is(tokens.front), "input: '" ~ s ~ "'");
 		tokens.popFront();
 		test(r.remainder, tokens);
@@ -280,19 +273,15 @@ writeln(r);
 	void testAll(string s, const(Token)[] tokens...) {
 		if (tokens.empty)
 			return;
-writeln("testAll ", s);
 		Result r = s.nextAll();
-writeln(r);
 		Assert(r.token, Is(tokens.front), "input: '" ~ s ~ "'");
 		tokens.popFront();
 		testAll(r.remainder, tokens);
 	}
 	void testVal(string s, const Token token, string value = null) {
-writeln("testVal ", s);
 		if (value is null)
 			value = s;
 		Result r = lexer.nextAll(s);
-writeln(r);
 		Assert(r.token, Is(token));
 		Assert(r.value, Is(value));	
 	}

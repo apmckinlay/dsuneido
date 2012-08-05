@@ -1,6 +1,5 @@
 @safe
-import std.string;
-import std.conv;
+import std.string, std.conv;
 
 const class Token {
 	string name;

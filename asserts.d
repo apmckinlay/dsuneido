@@ -1,6 +1,5 @@
 @safe
-import std.conv;
-import std.algorithm;
+import std.conv, std.algorithm;
 
 class Matcher(T) {
 	abstract bool matches(const T x);
